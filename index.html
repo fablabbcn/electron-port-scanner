@@ -2,18 +2,54 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Electron port scanner</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <h1>Electron port scanner</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
     We are using Node.js <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
 
+    <h4>Result</h4>
+    <table id="result">
+      <thead>
+        <tr>
+          <th>IP</th>
+          <th>Hostname</th>
+          <th>Mac</th>
+          <th>openPorts</th>
+          <th>osNmap</th>
+        </tr>
+      </thead>
+
+    </table>
     <script>
+      var result = document.getElementById('result');
       // You can also require other files to run in this process
       require('./renderer.js')
+
+      const nmap = require('node-nmap');
+
+      nmap.nmapLocation = 'nmap'; //default 
+      var nmapscan = new nmap.NmapScan('192.168.0.1/30', '');
+      result.innerHTML += 'Scanning...';
+      nmapscan.on('complete',function(data){
+          //console.log(data);
+          data.forEach(function(host){
+            console.log(host);
+            result.innerHTML +=
+              '<tr>' +
+              '<td>' + host.ip + '</td>' +
+              '<td>' + host.hostname + '</td>' +
+              '<td>' + host.mac + '</td>' +
+              '<td>' + host.openPorts + '</td>' +
+              '<td>' + host.osNmap + '</td>' +
+              '</tr>';
+          });
+      });
+
     </script>
+
   </body>
 </html>
