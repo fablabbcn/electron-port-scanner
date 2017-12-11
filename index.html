@@ -24,16 +24,19 @@
       </thead>
 
     </table>
+    <div id="status">
+    </div>
     <script>
       var result = document.getElementById('result');
+      var theStatus = document.getElementById('status');
       // You can also require other files to run in this process
       require('./renderer.js')
 
       const nmap = require('node-nmap');
 
       nmap.nmapLocation = 'nmap'; //default 
-      var nmapscan = new nmap.NmapScan('192.168.0.1/30', '');
-      result.innerHTML += 'Scanning...';
+      var nmapscan = new nmap.NmapScan('192.168.0.1/24', '');
+      theStatus.innerHTML += 'Scanning...';
       nmapscan.on('complete',function(data){
           //console.log(data);
           data.forEach(function(host){
@@ -47,6 +50,7 @@
               '<td>' + host.osNmap + '</td>' +
               '</tr>';
           });
+          theStatus.innerHTML = 'Done scanning.';
       });
 
     </script>
